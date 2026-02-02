@@ -129,7 +129,7 @@ Hour_in_day	int	Hora del día
 Id_area	int	Índice del área 
 Demanda	Float	Demanda para cada una de las horas [MW]
 
-## Descripción general del script
+## 2. Descripción general del script
 
 El script está diseñado para la simulación del despacho económico de un solo día con Pyomo, leyendo un LIBRO EXCEL (múltiples hojas).
 
@@ -139,44 +139,36 @@ Adicional a la preparación del entorno Python para poder hacer uso de la licenc
 Luego se realiza las importaciones asociadas al modelo. ConcreteModel es donde se define el problema de optimización indicando los conjuntos - Set, variables - Var, restricciones – Constraint, función objetivo – Objective - que en nuestro caso corresponde a minimizar el costo del despacho. Suffix lo usamos para poder extraer la variable dual asociada al costo marginal. 
  
 
-
-
-
-	Configuración:
+### 2.2. Configuración:
 Se carga el Excel que contiene los insumos del modelo y se nombran las hojas que contiene el Excel.
  
-	Limpieza y conversión europea:
+### 2.3. Limpieza y conversión europea:
 La función def_clean_columns permite limpiar los nombres de las columnas de cada una de las hojas eliminando todo lo que no sea letras, números y guiones bajos y pasando todo a minúscula. Se reemplaza los nombres originales de las columnas que trae el Excel por los nombres limpios. Ejemplo:  PMax(MW) -> pmax_mw.
 La función def_to_numeric_eu convierte a formato de punto como separador décimal. Ejemplo: 1.234,56 -> 1234.56. Por su parte, la función coerce_numeric_columns convierte columnas object (texto) a numérico con el fin de arregla cualquier número que esté aun mal formateado, sin ajustar las columnas skip_cols. 
 La función def_postprocess_types revisa todas las hojas posibles que podría significar hora y los convierte a Int64. 
  
 
-
- 
- 
- 
-
-	Carga Excel:
+### 2.4. Carga Excel:
 La función def_normalize_sheet_name convierte el nombre de la hoja a texto y lo deja sin espacios al inicio ni al final. La función def load_all_tables_from_excel crea un diccionario donde la clave es el nombre normalizado de la hoja y el valor el nombre real de la misma.
  
 Con lo anterior, se lee el Excel y se aplica las funciones previamente mencionadas para guardar la hoja limpia usando el nombre normalizado como clave.  
  
-	Funciones auxiliares:
+### 2.5. Funciones auxiliares:
 
 	Def pick_first_existing recibe el DataFrame y lista de nombres posibles de columna y devuelve el primer nombre que encuentra o None si no encontró ninguna. 
 	Def get_global_panalties obtiene las penalizaciones del DataFrame de parámetros globales y evuelve un diccionario. Si Excel no tiene los datos, define los valores por default para que el modelo no depende del Excel. 
 	Def first_area_exchange_limits devuelve un diccionario de los límites de intercambio por área (lb, lu). 
 	Def build_inflow_by_reservoir recibe el Data Frame de estación hidrológica que relaciona estación con el embalse y el Data Frame de caudales por estación hidrológica. Dvuelve el caudal recibido por embalse. 
 
-	Creación de diccionarios para usar en el modelo y solve:
+### 2.6.Creación de diccionarios para usar en el modelo y solve:
  
 Se cargan los DataFrame con nombres claros y cortos para cada uno y se crean los diccionarios y listas que se utilizan en el modelo de optimización. 
 
-	Modelo PYOMO:
-4.1. Conjuntos -Sets: 
-Se definen los conjuntos horas H, áreas A, flujo entre enlaces LINKS, hidroeléctricas sin embalse ROR, hidroeléctricas con embalse HRES, embalse RES térmicas commitment TC, térmicas no-commitment TNC, plantas de generación renovables eólica y solar REN y baterías BESS. En el caso de las horas se define que el conjunto tiene un orden de 1 a 24 para poder aplicar en el modelo la dinámica del embalse y de las baterías. 
+### 2.7. Modelo PYOMO:
+
+Conjuntos -Sets: Se definen los conjuntos horas H, áreas A, flujo entre enlaces LINKS, hidroeléctricas sin embalse ROR, hidroeléctricas con embalse HRES, embalse RES térmicas commitment TC, térmicas no-commitment TNC, plantas de generación renovables eólica y solar REN y baterías BESS. En el caso de las horas se define que el conjunto tiene un orden de 1 a 24 para poder aplicar en el modelo la dinámica del embalse y de las baterías. 
  
-	Variables: Se definen las variables necesarias para el modelo usando el formato estándar m.nombre_de_la_variable = Var(índice, dominio). 
+Variables: Se definen las variables necesarias para el modelo usando el formato estándar m.nombre_de_la_variable = Var(índice, dominio). 
  
 	Flow: flujo de intercambio entre cada enlace LINKS en cada hora. En este caso no se definen flujos específicos porque no se tiene la información pero esta variable sirve para definir entre que áreas existe intercambio. 
 	Exch: flujo neto de intercambio del área a en la hora h
@@ -197,10 +189,10 @@ Se definen los conjuntos horas H, áreas A, flujo entre enlaces LINKS, hidroelé
 	P_ch: Potencia de carga de la batería BESS en la hora H
 	Soc: Estado de carga de la batería BESS en la hora H
 
-	Restricciones: Se definen las restricciones necesarias para el modelo
+Restricciones: Se definen las restricciones necesarias para el modelo
 
 	Límite de intercambio por área: exch[a,h] = flujos que entran - flujos que salen.
-Permite reconocer que las áreas reciben o exportan energía a áreas específicas, no necesariamente a todas las demás áreas, además de definir que si entra es positivo el flujo y si el flujo es de salida, entonces tiene un valor negativo
+    Permite reconocer que las áreas reciben o exportan energía a áreas específicas, no necesariamente a todas las demás áreas, además de definir que si entra es positivo el flujo y si el flujo es de salida, entonces tiene un valor negativo
  
 	Límite de intercambios de acuerdo con los límites de importación [UB] y exportación [LB] definidos
  
@@ -209,39 +201,29 @@ Permite reconocer que las áreas reciben o exportan energía a áreas específic
 	Ecuación de balance: la generación + Importación + descarga de las baterías debe ser igual a la demanda + exportación + carga de las baterías+ demanda no atendida
  
 	Límites de potencias: 
-La potencia generada por cada planta ROR debe ser menor o igual a su potencia máxima afectada por el perfil de la hora.
- 
-La potencia generada por HRES debe ser igual a su caudal turbinado multiplicado por el factor medio de producción. Así miso, la potencia generada debe esta entre su potencia mínima (se define cero por default) y su potencia máxima. 
- 
- 
-La potencia generada por las térmicas no puede estar por debajo de su potencia mínima (cero por default ni ser superior a su potencia máxima.
- 
-La energía generada por la planta eólica y solar + el vertimiento renovable (curtailment) debe ser igual al recurso disponible para generar.
+	La potencia generada por cada planta ROR debe ser menor o igual a su potencia máxima afectada por el perfil de la hora.
+ 	La potencia generada por HRES debe ser igual a su caudal turbinado multiplicado por el factor medio de producción. Así miso, la potencia generada debe esta entre su potencia mínima (se define cero por default) y su potencia máxima. 
+ 	La potencia generada por las térmicas no puede estar por debajo de su potencia mínima (cero por default ni ser superior a su potencia máxima.
+	La energía generada por la planta eólica y solar + el vertimiento renovable (curtailment) debe ser igual al recurso disponible para generar.
  
 	Caudales máximos y mínimos: 
-El caudal turbinado junto con el caudal vertido no puede superar el caudal máximo. 
+	El caudal turbinado junto con el caudal vertido no puede superar el caudal máximo. 
  
 	Dinámica del embalse y límites:
-El volumen del embalse al final de la hora 1 corresponde al volumen inicial más el caudal recibido menos el caudal turbinado y vertido. En el caso de las horas 2 a la 24 el volumen al final del embalse, toma el volumen de la hora anterior añadiendo el caudal recibido y restando el caudal turbinado y vertido. 
-  
-Adicional a la dinámica se define las restricciones asociadas al límite del volumen de los embalses y la penalización para evitar que el nivel de cada embalse disminuya por debajo de su nivel inicial.
+	El volumen del embalse al final de la hora 1 corresponde al volumen inicial más el caudal recibido menos el caudal turbinado y vertido. En el caso de las horas 2 a la 24 el volumen al final del embalse, toma el volumen de la hora anterior añadiendo el caudal            recibido y restando el caudal turbinado y vertido.  
+	
+	Adicional a la dinámica se define las restricciones asociadas al límite del volumen de los embalses y la penalización para evitar que el nivel de cada embalse disminuya por debajo de su nivel inicial.
  
 
 	Dinámica del almacenamiento de las baterías y límites de carga y descarga
-La potencia cargada o descargada en cada hora no puede ser superior a su límite máximo  
+	La potencia cargada o descargada en cada hora no puede ser superior a su límite máximo  
+	El almacenamiento de la batería al final de la hora 1 corresponde al almacenamiento inicial sumando la carga y restando la descarga de la hora. Para las horas 2 a la 24, en lugar de tomar el almacenamiento inicial se toma como punto de partida el nivel de     		almacenamiento de la hora anterior. 
+ 	El estado de carga de la batería debe estar entre su mínimo y máximo permitido. 
+    Finalmente se define la restricción que indica que no se puede cargar la batería más  de lo que le permite el estado de carga inicial en la hora y no se puede descarga la batería más de lo que se tiene disponible que se encuentra por encima del nivel mínimo.
  
-El almacenamiento de la batería al final de la hora 1 corresponde al almacenamiento inicial sumando la carga y restando la descarga de la hora. Para las horas 2 a la 24, en lugar de tomar el almacenamiento inicial se toma como punto de partida el nivel de almacenamiento de la hora anterior. 
- 
-El estado de carga de la batería debe estar entre su mínimo y máximo permitido. 
- 
-Finalmente se define la restricción que indica que no se puede cargar la batería más  de lo que le permite el estado de carga inicial en la hora y no se puede descarga la batería más de lo que se tiene disponible que se encuentra por encima del nivel mínimo.
- 
-	Función objetivo y solución
-Se calcula el costo horario de la térmica en función de su heat rate y el costo del combustible que utiliza.
- 
-Se define el costo que penaliza los vertimientos de las plantas hidroeléctricas
- 
-Se define la función objetivo a minimizar: 
+### 2.8. Función objetivo y solución
+
+Se calcula el costo horario de la térmica en función de su heat rate y el costo del combustible que utiliza. Se define el costo que penaliza los vertimientos de las plantas hidroeléctricas y se define la función objetivo a minimizar: 
  
 Esta función objetivo corresponde a  minimizar:
 ∑▒〖(P〗_(Ter,h) ×〖Costo comb〗_Ter×〖HR〗_Ter+〖O&M〗_Ter)+∑▒〖(P_(ren,h)×〖O&M〗_ren+〖Curt〗_(ren,h)×〖Costo〗_curt )+∑▒〖(P_(hres,h)×〖O&M〗_hres+〖Spill〗_(hres,h)×〖Costo〗_spill )+〗〗 ∑▒〖(Slack_(vmax_v,)×〖Costo〗_slackvmax )+∑▒〖(Slack_(vmin_v,)×〖Costo〗_slackvmin )+∑▒〖(Min (〖〖0,vfin〗_24-vini〗_v )× 〖Costo〗_(vini<vfin) )+∑▒〖(P_(hror,h)×〖O&M〗_ror )+〗〗 ∑▒〖(〖DNA〗_a×〖Costo〗_DNA 〗  〗〗
