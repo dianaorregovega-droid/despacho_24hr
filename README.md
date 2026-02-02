@@ -6,8 +6,7 @@ En el Excel “input_despacho24hv16” se encuentran los insumos que recibe el m
 En el excel “input_despacho24hv16_sinrestriccionesfinas” se encuentran los insumos que recibe el modelo para la simulación del escenario 2.) Baterías que reducen limitación de inyección de renovables”.
 En ambos documentos se encuentran las siguientes hojas: 
 
-Master_area:  
-Esta hoja describe el código de cada una de las 7 áreas y define si ésta es un área del sistema eléctrico colombiano o corresponde a un enlace de interconexión con otro país. Para el caso de esta simulación no se considera la coordinación con Ecuador. 
+Master_area: Esta hoja describe el código de cada una de las 7 áreas y define si ésta es un área del sistema eléctrico colombiano o corresponde a un enlace de interconexión con otro país. Para el caso de esta simulación no se considera la coordinación con Ecuador. 
 
 Nombre Campo	Tipo de dato	Descripción
 id_area	int	Para cada área del sistema se define un código -índice del Set A (áreas) 
@@ -15,23 +14,21 @@ name_area	Str 	Nombre del área (no entra a restricciones). Útil para reportes
 type_area	Str 	Internal: Área interna del sistema eléctrico
 External: Interconexión con otro país para el caso de análisis de importación y exportación o despacho coordinado. 
 
-Master_estacion_hidrologica:
-
-Define el código de cada una de las 58 estaciones hidrológicas, asociándolas al embalse correspondiente. Esta asociación permite relacionar los caudales recibidos con el embalse asociado a cada planta.
+Master_estacion_hidrologica: Define el código de cada una de las 58 estaciones hidrológicas, asociándolas al embalse correspondiente. Esta asociación permite relacionar los caudales recibidos con el embalse asociado a cada planta.
 
 Nombre Campo	Tipo de dato	Descripción
 Id_estacionhidrologica	Int	Número de la estación hidrológica
 Name_estacionhidrologica	Str 	Nombre de la estación hidrológica (no entra a restricciones). Útil para reportes
 Id_embalse	Str 	Id embalse asociado a cada estación hidrológica. Índice del Set RES. Con esto se puede definir a que estación hidrológica pertenece cada embalse y, por lo tanto, que caudal recibe el embalse.  
 
-Caudalesm3s:
-Describe los caudales asociados a cada estación hidrológica, previstos para el 15 de noviembre de 2027 mediante la aplicación de caudal histórico 2014-2016
+Caudalesm3s: Describe los caudales asociados a cada estación hidrológica, previstos para el 15 de noviembre de 2027 mediante la aplicación de caudal histórico 2014-2016
+
 Nombre Campo	Tipo de dato	Descripción
 id_estacionhidrologica	Int	Número de estación hidrológica
 Caudal_m3s	Float	Caudal promedio en m³/s. Parámetro Q[EH, w]. Decimal con coma. 
 
-Hydro_with_reservoir_base:
-Describe los parámetros relacionados con 20 hidroeléctricas con embalse: 
+Hydro_with_reservoir_base: Describe los parámetros relacionados con 20 hidroeléctricas con embalse: 
+
 Nombre Campo	Tipo de dato	Descripción
 Id_planta	Str	Índice del set HRES
 Name_planta	Str	Nombre de la planta hidroeléctrica con embalse
@@ -48,8 +45,8 @@ Vinic_hm3	Int	Volumen inicial del embalse [Hm3]. Esto se calcula como volumen m�
 O&M_USD$_per_MWh	Int	Costo de Operación y Mantenimiento [USD/MWh]
 
 
-Hydro_ror:
-Describe los parámetros relacionados con 32 plantas hidroeléctricas sin embalse. 5 de estas plantas equivalen a 137 hidroeléctricas sin embalse que se encontraban en operación en 2025 en cada área: 
+Hydro_ror: Describe los parámetros relacionados con 32 plantas hidroeléctricas sin embalse. 5 de estas plantas equivalen a 137 hidroeléctricas sin embalse que se encontraban en operación en 2025 en cada área: 
+
 Nombre Campo	Tipo de dato	Descripción
 Id_planta	Str	Índice del set HROR
 Name_planta	Str	Nombre de la planta sin embalse
@@ -58,15 +55,15 @@ Pmax_MW	Float	Potencia máxima de la planta definida en MW. Esta potencia ya lim
 Prod_MW_per_m3s	Int	Factor de producción promedio [MW/m3/s]
 O&M_USD$_per_MWh	Int	Costo de Operación y Mantenimiento [USD/MWh]
 
-Profile_ror_by_area:
-Se asume que el perfil horario respecto de la potencia máxima depende del área, por lo cual, se crea una tabla con el perfil en términos de fracción respecto de potencia máxima para cada una de las horas.
+Profile_ror_by_area: Se asume que el perfil horario respecto de la potencia máxima depende del área, por lo cual, se crea una tabla con el perfil en términos de fracción respecto de potencia máxima para cada una de las horas.
+
 Nombre Campo	Tipo de dato	Descripción
 Hour_in_day	int	Hora del día
 Id_area	int	Índice del área en la que se encuentra la planta de generación
 Profile	float	% de generación en la hora de la semana respecto de la potencia máxima. Se tomó como base el promedio de generación en 2025 de las hidroeléctricas sin embalse que componen el área correspondiente.
 
-Termica_commitment_base:
-Describe los parámetros relacionados con 40 termoeléctricas
+Termica_commitment_base: Describe los parámetros relacionados con 40 termoeléctricas
+
 Nombre Campo	Tipo de dato	Descripción
 Id_planta	Str	Índice del set TC (térmicas con commitment)
 Name_planta	Str	Nombre de la planta de generación termoeléctrica
@@ -79,8 +76,7 @@ O&M_USD$_per_MWh	float	Costo variable operación y mantenimiento [USD/MWh]
 Costo_transporte	Int	Costo de transporte [USD/MBTU] se coloca el valor en cero, considerando que el costo del combustible tomado para este análisis ya incluye el costo de transporte. 
 startup_cost_kUSD$	Int	Costo de arranque [Kusd]. Al ser un despacho de 24 horas, no se utiliza este parámetro
 
-Termica_no_commitment_base:
-Describe los parámetros relacionados con 40 termoeléctricas
+Termica_no_commitment_base: Describe los parámetros relacionados con 40 termoeléctricas
 
 Nombre Campo	Tipo de dato	Descripción
 Id_planta	Str	Índice del set TNC (térmicas no commitment)
@@ -93,14 +89,15 @@ O&M_USD$_per_MWh	Float	Costo variable operación y mantenimiento [USD/MWh]
 Heat_Rate	Float	Consumo específico [MBTU/MW]
 
 Costo_combustible:
+
 Nombre Campo	Tipo de dato	Descripción
 Fuel code	Int	Código del combustible utilizado por la termoeléctrica
 Fuel_name	Float	Nombre del combustible utilizado por la termoeléctrica. 
 Fuel_unit	Float	Unidad del combustible utilizado por la termoeléctrica [por defecto se utiliza MBTU
 Fuel_cost	Float	Costo de combustible [USD/MBTU]
 
-Parametro_renovable:
-Describe los parámetros relacionados con 349 plantas de generación renovable eólica y solar agrupadas en 128 plantas.
+Parametro_renovable: Describe los parámetros relacionados con 349 plantas de generación renovable eólica y solar agrupadas en 128 plantas.
+
 Nombre Campo	Tipo de dato	Descripción
 Id_planta	Str	Índice del set REN (renovables)
 Name_planta	Str	Nombre de la planta de generación eólica o solar
@@ -110,31 +107,34 @@ Tech	Str	Tipo de tecnología [Solar / Eólica]
 Heat_Rate	Float	Consumo específico [MBTU/MW]
 O&M_USD$_per_MWh	float	Costo variable operación y mantenimiento [USD/MWh]
 
-Profile_renovable:
-En el caso de la energía eólica, se asume un perfil horario respecto de la potencia máxima para cada área el cual se calculó en función del promedio de generación de las plantas existentes en cada área. En relación con la tecnología eólica, se calculó un único perfil para la tecnología con base en la generación de 2025 de las plantas de generación
+Profile_renovable: En el caso de la energía eólica, se asume un perfil horario respecto de la potencia máxima para cada área el cual se calculó en función del promedio de generación de las plantas existentes en cada área. En relación con la tecnología eólica, se calculó un único perfil para la tecnología con base en la generación de 2025 de las plantas de generación
+
 Nombre Campo	Tipo de dato	Descripción
 Hour_in_day	int	Hora del día
 Id_area	int	Índice del área en la que se encuentra la planta de generación
 Tech	Str	Tipo de tecnología [Solar / Eólica]
 Shape_Frac	Float	% de generación en la hora de la semana respecto de la potencia máxima [valor entre 0 y 1]. 
 
-Limites_areas:
-Describe los límites de intercambio entre áreas de forma que se cumpla la ecuación: LB[MW] <= intercambio neto <= UB [MW]. Si el intercambio es positivo, el área está importando y, si el intercambio es negativo el área, está exportando. Se toman los límites actuales con el fin de no considerar el escenario más conservador. 
+Limites_areas: Describe los límites de intercambio entre áreas de forma que se cumpla la ecuación: LB[MW] <= intercambio neto <= UB [MW]. Si el intercambio es positivo, el área está importando y, si el intercambio es negativo el área, está exportando. Se toman los límites actuales con el fin de no considerar el escenario más conservador. 
+
 Nombre Campo	Tipo de dato	Descripción
 Id_area	Int	Índice del área en la que se encuentra la planta de generación
 LB_MW	Int	Límite inferior de intercambio que se corresponde con el límite de exportación del área [MW]
 UB_MW	Int	Límite superior de intercambio que se corresponde con el límite de importación del área [MW]
 
-Demanda:
-Contiene el registro de las demandas horarias previstas para cada área.
+Demanda: Contiene el registro de las demandas horarias previstas para cada área.
+
 Nombre Campo	Tipo de dato	Descripción
 Hour_in_day	int	Hora del día
 Id_area	int	Índice del área 
 Demanda	Float	Demanda para cada una de las horas [MW]
 
-	Descripción general del script
+## Descripción general del script
+
 El script está diseñado para la simulación del despacho económico de un solo día con Pyomo, leyendo un LIBRO EXCEL (múltiples hojas).
-2.1. Definiciones e importaciones: 
+
+### 2.1. Definiciones e importaciones: 
+
 Adicional a la preparación del entorno Python para poder hacer uso de la licencia académica de gurobi, el script inicia con la importación de módulos fundamentales de la biblioteca de Python. El módulo re permite buscar y limpiar texto, typing se usa para indicar el tipo de datos que se espera manejar, pandas para leer archivos de Excel y manejar tablas y numpy para operaciones numéricas, manejo de arrays, conversiones y valores nulos (NaN).
 Luego se realiza las importaciones asociadas al modelo. ConcreteModel es donde se define el problema de optimización indicando los conjuntos - Set, variables - Var, restricciones – Constraint, función objetivo – Objective - que en nuestro caso corresponde a minimizar el costo del despacho. Suffix lo usamos para poder extraer la variable dual asociada al costo marginal. 
  
