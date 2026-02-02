@@ -224,17 +224,5 @@ Restricciones: Se definen las restricciones necesarias para el modelo
 ### 2.8. Función objetivo y solución
 
 Se calcula el costo horario de la térmica en función de su heat rate y el costo del combustible que utiliza. Se define el costo que penaliza los vertimientos de las plantas hidroeléctricas y se define la función objetivo a minimizar: 
- 
-Esta función objetivo corresponde a  minimizar:
-∑▒〖(P〗_(Ter,h) ×〖Costo comb〗_Ter×〖HR〗_Ter+〖O&M〗_Ter)+∑▒〖(P_(ren,h)×〖O&M〗_ren+〖Curt〗_(ren,h)×〖Costo〗_curt )+∑▒〖(P_(hres,h)×〖O&M〗_hres+〖Spill〗_(hres,h)×〖Costo〗_spill )+〗〗 ∑▒〖(Slack_(vmax_v,)×〖Costo〗_slackvmax )+∑▒〖(Slack_(vmin_v,)×〖Costo〗_slackvmin )+∑▒〖(Min (〖〖0,vfin〗_24-vini〗_v )× 〖Costo〗_(vini<vfin) )+∑▒〖(P_(hror,h)×〖O&M〗_ror )+〗〗 ∑▒〖(〖DNA〗_a×〖Costo〗_DNA 〗  〗〗
-
-Donde: 
-P_(Ter,h)Potencia generada por la planta térmica ter en la hora h [MW]
-〖Costo comb〗_Ter Costo de combustible para la planta Ter [USD/MBTU]
-〖HR〗_Ter Heat Rate de la térmica Ter [MBTU/MWh]
-〖O&M〗_TerCosto variable de operación y mantenimiento para la planta térmica Ter [USD/MWh]
-P_(ren,h) Potencia generada por la planta eólica o solar ter en la hora h [MW]
-〖O&M〗_renCosto O&M asignado a la planta renovable ren. Se asume un costo de 0,01 USD/MWh para todas las plantas. 
-〖Curt〗_(ren,h)Vertimiento de energía eólica o solar 
 Finalmente, habiendo descrito la función objetivo a minimiza se soluciona utilizando la licencia académica de Gurobi  y especificando las variables duales que se quieren obtener. 
  
