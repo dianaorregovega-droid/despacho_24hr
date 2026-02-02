@@ -5,8 +5,10 @@ Despacho 24 horas sin red Colombia con y sin baterías para el 15 de noviembre d
 En el Excel “input_despacho24hv16” se encuentran los insumos que recibe el modelo para la construcción del escenario base y escenario 1.)  “Baterías que no reducen limitación de inyección de renovables”. En el excel “input_despacho24hv16_sinrestriccionesfinas” se encuentran los inusmo que recibe el modelo para la construcción del escenario 2.) “Baterías que reducen limitación de inyección de renovables”
 En el excel “input_despacho24hv16_sinrestriccionesfinas” se encuentran los insumos que recibe el modelo para la simulación del escenario 2.) Baterías que reducen limitación de inyección de renovables”.
 En ambos documentos se encuentran las siguientes hojas: 
+
 Master_area:  
 Esta hoja describe el código de cada una de las 7 áreas y define si ésta es un área del sistema eléctrico colombiano o corresponde a un enlace de interconexión con otro país. Para el caso de esta simulación no se considera la coordinación con Ecuador. 
+
 Nombre Campo	Tipo de dato	Descripción
 id_area	int	Para cada área del sistema se define un código -índice del Set A (áreas) 
 name_area	Str 	Nombre del área (no entra a restricciones). Útil para reportes
@@ -14,7 +16,9 @@ type_area	Str 	Internal: Área interna del sistema eléctrico
 External: Interconexión con otro país para el caso de análisis de importación y exportación o despacho coordinado. 
 
 Master_estacion_hidrologica:
+
 Define el código de cada una de las 58 estaciones hidrológicas, asociándolas al embalse correspondiente. Esta asociación permite relacionar los caudales recibidos con el embalse asociado a cada planta.
+
 Nombre Campo	Tipo de dato	Descripción
 Id_estacionhidrologica	Int	Número de la estación hidrológica
 Name_estacionhidrologica	Str 	Nombre de la estación hidrológica (no entra a restricciones). Útil para reportes
